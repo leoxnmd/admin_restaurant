@@ -11,19 +11,22 @@ import Blogcatlist from "./pages/Blogcatlist";
 import Orders from "./pages/Orders";
 import Customers from "./pages/Customers";
 import Colorlist from "./pages/Colotlist";
-import Categorylist from "./pages/Categorylist";
+// import Categorylist from "./pages/Categorylist";
+import Categorylist from "./pages/category/CategoryList";
 import Brandlist from "./pages/Brandlist";
 import Productlist from "./pages/Productlist";
 import Addblog from "./pages/Addblog";
 import Addblogcat from "./pages/Addblogcat";
 import Addcolor from "./pages/Addcolor";
-import Addcat from "./pages/Addcat";
+import CategoryAdd from "./pages/category/CategoryAdd";
 import Addbrand from "./pages/Addbrand";
 import Addproduct from "./pages/Addproduct";
 import Couponlist from "./pages/Couponlist";
 import AddCoupon from "./pages/AddCoupon";
 import ViewEnq from "./pages/ViewEnq";
 import ViewOrder from "./pages/ViewOrder";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import CategoryEdit from "./pages/category/CategoryEdit";
 function App() {
   return (
     <Router>
@@ -50,9 +53,12 @@ function App() {
           <Route path="list-color" element={<Colorlist />} />
           <Route path="color" element={<Addcolor />} />
           <Route path="color/:id" element={<Addcolor />} />
+          {/* <Route path="list-category" element={<Categorylist />} /> */}
           <Route path="list-category" element={<Categorylist />} />
-          <Route path="category" element={<Addcat />} />
-          <Route path="category/:id" element={<Addcat />} />
+          <Route path="category" element={<CategoryAdd />} />
+          {/* <Route path="category/:id" element={<Addcat />} /> */}
+          {/* ///////////// */}
+          <Route path="category/edit/:id" element={<CategoryEdit />} />
           <Route path="list-brand" element={<Brandlist />} />
           <Route path="brand" element={<Addbrand />} />
           <Route path="brand/:id" element={<Addbrand />} />
