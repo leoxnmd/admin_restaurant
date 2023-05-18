@@ -1,78 +1,143 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
-import { BiEdit } from "react-icons/bi";
-import { AiFillDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../features/product/productSlice";
-import { Link } from "react-router-dom";
+import { createProducts, deleteProducts, editProduct, getProducts } from "../features/product/productSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+
 const columns = [
   {
-    title: "SNo",
+    title: "ID",
     dataIndex: "key",
+    key: "id",
   },
   {
-    title: "Title",
-    dataIndex: "title",
-    sorter: (a, b) => a.title.length - b.title.length,
+    title: "CATEGORY ID",
+    dataIndex: "categoryId",
   },
   {
-    title: "Brand",
-    dataIndex: "brand",
-    sorter: (a, b) => a.brand.length - b.brand.length,
+    title: "STATUS",
+    dataIndex: "status",
   },
   {
-    title: "Category",
-    dataIndex: "category",
-    sorter: (a, b) => a.category.length - b.category.length,
+    title: "IMAGE",
+    dataIndex: "image",
+    render: (image) => <img src={image} alt="product" width="50" height="50" />,
   },
   {
-    title: "Color",
-    dataIndex: "color",
+    title: "NAME",
+    dataIndex: "name",
   },
   {
     title: "Price",
     dataIndex: "price",
-    sorter: (a, b) => a.price - b.price,
   },
   {
-    title: "Action",
-    dataIndex: "action",
+    title: "TOTAL SOLD",
+    dataIndex: "totalSold",
   },
+  {
+    title: "DESCRIPTION",
+    dataIndex: "description",
+  },
+  {
+    title: "QUANTITY",
+    dataIndex: "quantity",
+  },
+  {
+    title: "CREATED AT",
+    dataIndex: "createdAt",
+  },
+  {
+    title: "UPDATED AT",
+    dataIndex: "updatedAt",
+  },
+  {
+    title: "UPDATED BY",
+    dataIndex: "updatedBy",
+  },
+  {
+    title: "CREATED BY",
+    dataIndex: "createdBy",
+  },
+  {
+    title: "",
+    dataIndex: "edit",
+  }
 ];
 
 const Productlist = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(getProducts());
   }, []);
+
+  const handleDelete = (productId) => {
+    dispatch(deleteProducts(productId));
+    navigate('/admin/new-page-product');
+    window.location.reload();
+  }
+
+  const handleAddProduct = () => {
+    navigate('/admin/create-product');
+  }
+
+
   const productState = useSelector((state) => state.product.products);
   const data1 = [];
   for (let i = 0; i < productState.length; i++) {
     data1.push({
-      key: i + 1,
-      title: productState[i].title,
-      brand: productState[i].brand,
-      category: productState[i].category,
-      color: productState[i].color,
+      key: productState[i].id,
+      categoryId: productState[i].categoryId,
+      status: productState[i].status,
+      image: productState[i].image,
+      name: productState[i].name,
       price: `${productState[i].price}`,
-      action: (
-        <>
-          <Link to="/" className=" fs-3 text-danger">
-            <BiEdit />
-          </Link>
-          <Link className="ms-3 fs-3 text-danger" to="/">
-            <AiFillDelete />
-          </Link>
-        </>
-      ),
+      totalSold: productState[i].totalSold,
+      description: productState[i].description,
+      quantity: productState[i].quantity,
+      createdAt: productState[i].createdAt,
+      updatedBy: productState[i].updatedBy,
+      createdBy: productState[i].createdBy,
     });
   }
   console.log(data1);
   return (
     <div>
       <h3 className="mb-4 title">Products</h3>
+      <button onClick={handleAddProduct}>ADD PRODUCT</button>
       <div>
-        <Table columns={columns} dataSource={data1} />
+        <Table
+          columns={[
+            ...columns,
+            {
+              title: "",
+              dataIndex: "delete",
+              render: (text, record) => (
+                <>
+                  <Link
+                    className="ms-3 fs-3 text-danger"
+                    to={`/admin/edit-product/${record.key}`}
+                  >
+                    <AiFillEdit />
+                  </Link>
+                  <Link
+                    className="ms-3 fs-3 text-danger"
+                    to="/"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDelete(record.key);
+                    }}
+                  >
+                    <AiFillDelete />
+                  </Link>
+                </>
+              ),
+            },
+          ]}
+          dataSource={data1}
+        />
       </div>
     </div>
   );

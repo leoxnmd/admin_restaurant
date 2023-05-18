@@ -1,43 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BsArrowDownRight, BsArrowUpRight } from "react-icons/bs";
 import { Column } from "@ant-design/plots";
 import { Table } from "antd";
+import { getOrders } from "../features/orderByHieu/orderSlice";
+import { getOrdersTotalPriceOfYear } from "../features/orderByHieu/orderSlice";
 const columns = [
   {
-    title: "SNo",
+    title: "PRODUCT ID",
     dataIndex: "key",
   },
   {
-    title: "Name",
+    title: "NAME",
     dataIndex: "name",
   },
   {
-    title: "Product",
-    dataIndex: "product",
-  },
-  {
-    title: "Status",
-    dataIndex: "staus",
+    title: "QUANTITY",
+    dataIndex: "quantity",
   },
 ];
-const data1 = [];
-for (let i = 0; i < 46; i++) {
-  data1.push({
-    key: i,
-    name: `Edward King ${i}`,
-    product: 32,
-    staus: `London, Park Lane no. ${i}`,
-  });
-}
+
 const Dashboard = () => {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("user Effect")
+    dispatch(getOrders());
+    dispatch(getOrdersTotalPriceOfYear())
+  }, []);
+
+  const State = useSelector((state) => state);
+  const orderState = State.order.orders;
+  let orderTotalOfYearState = State.order.getOrdersTotalPriceOfYear;
+
+
+  const dataOrders = [];
+  for (let i = 0; i < orderState.length; i++) {
+    dataOrders.push({
+      key: orderState[i].productId,
+      name: orderState[i].name,
+      quantity: orderState[i].quantity
+    });
+  }
+
+  // function getTotalPriceOfYear(month) {
+  //   const totalArray = orderTotalOfYearState.filter(item => item.createdAt === month).map(item => item.total);
+  //   console.log('total array:',totalArray);
+  //   return totalArray;
+  // }
+
+
+  console.log(orderState);
+  console.log(orderTotalOfYearState);
+  // console.log(State);
+
   const data = [
     {
       type: "Jan",
-      sales: 38,
+      sales: 30,
+      // sales: Number(getTotalPriceOfYear(3)),
     },
     {
       type: "Feb",
       sales: 52,
+      // sales: Number(getTotalPriceOfYear(5)),
     },
     {
       type: "Mar",
@@ -159,7 +186,7 @@ const Dashboard = () => {
       <div className="mt-4">
         <h3 className="mb-5 title">Recent Orders</h3>
         <div>
-          <Table columns={columns} dataSource={data1} />
+          <Table columns={columns} dataSource={dataOrders} />
         </div>
       </div>
     </div>
