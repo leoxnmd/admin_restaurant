@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import {
   AiOutlineDashboard,
@@ -18,13 +18,35 @@ import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { decodeToken } from "../utils/decodeToken";
+import { signout } from "../features/signout/signoutSlice";
 const { Header, Sider, Content } = Layout;
+
 const MainLayout = () => {
+  const navigate = useNavigate();
+
+  const [decodedToken, setDecodedToken] = useState({});
+  useEffect(() => {
+    const decoded = decodeToken();
+    if (decoded) {
+      setDecodedToken(decoded);
+    }
+  }, []);
+
+  const dispatch = useDispatch();
+  const handleSignoutClick = () => {
+    dispatch(signout()).then(() => {
+      console.log("Da dang xuat");
+      window.location="/";
+    });
+  };
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const navigate = useNavigate();
+
   return (
     <Layout /* onContextMenu={(e) => e.preventDefault()} */>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -197,8 +219,8 @@ const MainLayout = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h5 className="mb-0">Navdeep</h5>
-                <p className="mb-0">navdeepdahiya753@gmail.com</p>
+                <h5 className="mb-0">{decodedToken.name}</h5>
+                <p className="mb-0">{decodedToken.sub}</p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>
@@ -214,7 +236,8 @@ const MainLayout = () => {
                   <Link
                     className="dropdown-item py-1 mb-1"
                     style={{ height: "auto", lineHeight: "20px" }}
-                    to="/"
+                    to="/signout"
+                    onClick={handleSignoutClick}
                   >
                     Signout
                   </Link>

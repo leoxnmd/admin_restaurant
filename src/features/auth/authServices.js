@@ -1,17 +1,28 @@
 import axios from "axios";
 import { config } from "../../utils/axiosconfig";
 import { base_url } from "../../utils/baseUrl";
+import jwt_decode from "jwt-decode";
 const login = async (user) => {
   const response = await axios.post(`${base_url}auth/login`, user);
-  const checkLogin = response.data.errorCodes !== undefined ? false : true;
-  console.log(checkLogin);
-  if (checkLogin) {
-    console.log(response.data.data);
-    localStorage.setItem("user", JSON.stringify(response.data.data));
-    return response.data.data;
+
+  const checkAuthentication =
+    response.data.errorCodes !== undefined ? false : true;
+
+  if (checkAuthentication) {
+    const decodeToken = jwt_decode(response.data.data.token);
+    const roles = decodeToken.roles;
+    const checkAuthorization =
+      roles.includes("OWNER") || roles.includes("STAFF") ? true : false;
+
+    if (checkAuthorization) {
+      localStorage.setItem("user", JSON.stringify(response.data.data));
+      return response.data.data;
+    }
+    throw new Error("Đăng nhập thất bại! Bạn không đủ quyền truy cập");
   }
-  throw new Error("Đăng nhập thất bại");
+  throw new Error("Đăng nhập thất bại! Sai tài khoản mật khẩu");
 };
+
 const getOrders = async () => {
   const response = await axios.get(`${base_url}user/getallorders`, config);
 

@@ -57,13 +57,16 @@ export const authSlice = createSlice({
         state.isError = false;
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        console.log("Payload co token: " + action.payload.token);
+        state.user = action.payload.token;
         state.message = "success";
       })
       .addCase(login.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error;
+        // state.message = action.error;
+        state.message = action.payload.message;
+        console.log(action.payload.message);
         state.isLoading = false;
       })
       .addCase(getOrders.pending, (state) => {
