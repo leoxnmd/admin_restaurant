@@ -5,10 +5,9 @@ import jwt_decode from "jwt-decode";
 const login = async (user) => {
   const response = await axios.post(`${base_url}auth/login`, user);
 
-  const checkAuthentication =
-    response.data.errorCodes !== undefined ? false : true;
+  const loginFail = "errorCodes" in response.data;
 
-  if (checkAuthentication) {
+  if (!loginFail) {
     const decodeToken = jwt_decode(response.data.data.token);
     const roles = decodeToken.roles;
     const checkAuthorization =
