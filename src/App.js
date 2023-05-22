@@ -24,6 +24,10 @@ import Couponlist from "./pages/Couponlist";
 import AddCoupon from "./pages/AddCoupon";
 import ViewEnq from "./pages/ViewEnq";
 import ViewOrder from "./pages/ViewOrder";
+import Stafflist from "./pages/staffList";
+import AddStaff from "./pages/addStaff";
+import EditStaff from "./pages/EditStaff";
+import DetailStaff from "./pages/detailStaff";
 function App() {
   return (
     <Router>
@@ -58,6 +62,10 @@ function App() {
           <Route path="brand/:id" element={<Addbrand />} />
           <Route path="list-product" element={<Productlist />} />
           <Route path="product" element={<Addproduct />} />
+          <Route path="staffList" element={<Stafflist/>}/>
+          <Route path="addStaff" element={<AddStaff/>}/>
+          <Route path="editStaff/:id" element={<EditStaff/>}/>
+          <Route path="detailStaff/:id" element={<DetailStaff/>}/>
         </Route>
       </Routes>
     </Router>

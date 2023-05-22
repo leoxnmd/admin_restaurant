@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { ImBlog } from "react-icons/im";
 import { IoIosNotifications } from "react-icons/io";
-import { FaClipboardList, FaBloggerB } from "react-icons/fa";
+import { FaClipboardList, FaBloggerB, FaUserTie,FaPlus } from "react-icons/fa";
 import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
@@ -128,6 +128,24 @@ const MainLayout = () => {
               key: "orders",
               icon: <FaClipboardList className="fs-4" />,
               label: "Orders",
+            },
+
+            {
+              key: "staffs",
+              icon: <FaUserTie className="fs-4" />,
+              label: "Staffs",
+              children:[
+                {
+                  key: "staffList",
+                  icon: <FaUserTie className="fs-4" />,
+                  label: "Staff List",
+                },
+                {
+                  key: "addStaff",
+                  icon: <FaPlus className="fs-4" />,
+                  label: "Add Staff",
+                },
+              ]
             },
             {
               key: "marketing",
