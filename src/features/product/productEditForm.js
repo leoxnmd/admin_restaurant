@@ -52,38 +52,38 @@ function ProductEditForm() {
 
   return (
     <form >
-      <label>
-        Name:
-        <input type="text" value={product.name} onChange={e => handleNameChange(e.target.value)} />
-      </label>
-      <label>
-        Price:
-        <input type="number" value={product.price} onChange={e => handlePriceChange(e.target.value)} />
-      </label>
-      <label>
-        Category ID:
-        <input type="text" value={product.categoryId} onChange={e => handleCategoryIdChange(e.target.value)} />
-      </label>
-      <label>
-        Status:
-        <input type="text" value={product.status} onChange={e => handleStatusChange(e.target.value)} />
-      </label>
-      <label>
-        Image:
-        <input type="text" value={product.image} onChange={e => handleImageChange(e.target.value)} />
-      </label>
-      <label>
-        Total Sold:
-        <input type="number" value={product.totalSold} onChange={e => handleTotalSoldChange(e.target.value)} />
-      </label>
-      <label>
-        Description:
-        <textarea value={product.description} onChange={e => handleDescriptionChange(e.target.value)} />
-      </label>
-      <label>
-        Quantity:
-        <input type="number" value={product.quantity} onChange={e => handleQuantityChange(e.target.value)} />
-      </label>
+      <div class="col-md-4 mb-3">
+        <label for="validationDefault01">Name</label>
+        <input type="text" class="form-control" id="validationDefault01" value={product.name} onChange={e => handleNameChange(e.target.value)} />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="validationDefault01">Price</label>
+        <input type="number" class="form-control" id="validationDefault01" value={product.price} onChange={e => handlePriceChange(e.target.value)} />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="validationDefault01">Category Id</label>
+        <input type="number" class="form-control" id="validationDefault01" value={product.categoryId} onChange={e => handleCategoryIdChange(e.target.value)} />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="validationDefault01">Status</label>
+        <input type="number" class="form-control" id="validationDefault01" value={product.status} onChange={e => handleStatusChange(e.target.value)} />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="validationDefault01">Image</label>
+        <input type="text" class="form-control" id="validationDefault01" value={product.image} onChange={e => handleImageChange(e.target.value)}/>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="validationDefault01">total Sold</label>
+        <input type="number" class="form-control" id="validationDefault01" value={product.totalSold} onChange={e => handleTotalSoldChange(e.target.value)}/>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Description</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" value={product.description} onChange={e => handleDescriptionChange(e.target.value)}></textarea>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="validationDefault01">Quantity</label>
+        <input type="number" class="form-control" id="validationDefault01" value={product.quantity} onChange={e => handleQuantityChange(e.target.value)} />
+      </div>
       <button type="button" onClick={handleSave}>Save</button>
     </form>
   );

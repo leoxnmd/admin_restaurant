@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProducts, editProduct, getProducts } from "../features/product/productSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+
+import { createProducts, deleteProducts, editProduct, getProducts } from "../features/product/productSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 
@@ -72,14 +77,6 @@ const Productlist = () => {
   useEffect(() => {
     dispatch(getProducts());
   }, []);
-
-  const handleDelete = (productId) => {
-    dispatch(deleteProducts(productId));
-    navigate('/admin/new-page-product');
-    window.location.reload();
-  }
-
-
   const productState = useSelector((state) => state.product.products);
   const data1 = [];
   for (let i = 0; i < productState.length; i++) {
@@ -102,6 +99,7 @@ const Productlist = () => {
   return (
     <div>
       <h3 className="mb-4 title">Products</h3>
+      <button onClick={handleAddProduct}>ADD PRODUCT</button>
       <div>
         <Table
           columns={[

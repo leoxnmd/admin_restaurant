@@ -13,7 +13,7 @@ const getProductsId = async (id) => {
   return response.data.data;
 };
 const createProduct = async (product) => {
-  const response = await axios.post(`${base_url}product/`, product, config);
+  const response = await axios.post(`${base_url}product/owner/save`, product, config);
 
   return response.data;
 };
