@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProducts, editProduct, getProducts } from "../features/product/productSlice";
+
+import { createProducts, deleteProducts, editProduct, getProducts } from "../features/product/productSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 
@@ -79,6 +80,10 @@ const Productlist = () => {
     window.location.reload();
   }
 
+  const handleAddProduct = () => {
+    navigate('/admin/create-product');
+  }
+
 
   const productState = useSelector((state) => state.product.products);
   const data1 = [];
@@ -102,6 +107,7 @@ const Productlist = () => {
   return (
     <div>
       <h3 className="mb-4 title">Products</h3>
+      <button onClick={handleAddProduct}>ADD PRODUCT</button>
       <div>
         <Table
           columns={[

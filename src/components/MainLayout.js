@@ -13,7 +13,13 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { ImBlog } from "react-icons/im";
 import { IoIosNotifications } from "react-icons/io";
-import { FaClipboardList, FaBloggerB, FaAngellist } from "react-icons/fa";
+import {
+  FaClipboardList,
+  FaBloggerB,
+  FaAngellist,
+  FaUserTie,
+  FaPlus,
+} from "react-icons/fa";
 import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
@@ -38,7 +44,7 @@ const MainLayout = () => {
   const handleSignoutClick = () => {
     dispatch(signout()).then(() => {
       console.log("Da dang xuat");
-      window.location="/";
+      window.location = "/";
     });
   };
 
@@ -113,6 +119,23 @@ const MainLayout = () => {
                   key: "update-status-order",
                   icon: <ImBlog className="fs-4" />,
                   label: "Update Order",
+                },
+              ],
+            },
+            {
+              key: "staffs",
+              icon: <FaUserTie className="fs-4" />,
+              label: "Staffs",
+              children: [
+                {
+                  key: "staffList",
+                  icon: <FaUserTie className="fs-4" />,
+                  label: "Staff List",
+                },
+                {
+                  key: "addStaff",
+                  icon: <FaPlus className="fs-4" />,
+                  label: "Add Staff",
                 },
               ],
             },

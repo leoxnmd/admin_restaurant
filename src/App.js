@@ -24,9 +24,15 @@ import Couponlist from "./pages/Couponlist";
 import AddCoupon from "./pages/AddCoupon";
 import ViewEnq from "./pages/ViewEnq";
 import ViewOrder from "./pages/ViewOrder";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import CategoryEdit from "./pages/category/CategoryEdit";
 import ProductEditForm from "./features/product/productEditForm";
+import ProductCreateForm from "./features/product/productCreateForm";
+import Stafflist from "./pages/staffList";
+import AddStaff from "./pages/addStaff";
+import EditStaff from "./pages/EditStaff";
+import DetailStaff from "./pages/detailStaff";
+
 function App() {
   return (
     <Router>
@@ -63,6 +69,11 @@ function App() {
           <Route path="edit-product/:id" element={<ProductEditForm />} />
           <Route path="list-orders" element={<Orders />} />
           <Route path="update-status-order" element={<Orders />} />
+          <Route path="create-product" element={<ProductCreateForm />} />
+          <Route path="staffList" element={<Stafflist />} />
+          <Route path="addStaff" element={<AddStaff />} />
+          <Route path="editStaff/:id" element={<EditStaff />} />
+          <Route path="detailStaff/:id" element={<DetailStaff />} />
         </Route>
       </Routes>
     </Router>
