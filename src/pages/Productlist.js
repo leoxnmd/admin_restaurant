@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
-import { BiEdit } from "react-icons/bi";
-import { AiFillDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../features/product/productSlice";
-import { Link } from "react-router-dom";
+import { deleteProducts, editProduct, getProducts } from "../features/product/productSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+
 const columns = [
   {
     title: "ID",
@@ -60,13 +60,26 @@ const columns = [
     title: "CREATED BY",
     dataIndex: "createdBy",
   },
+  {
+    title: "",
+    dataIndex: "edit",
+  }
 ];
 
 const Productlist = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(getProducts());
   }, []);
+
+  const handleDelete = (productId) => {
+    dispatch(deleteProducts(productId));
+    navigate('/admin/new-page-product');
+    window.location.reload();
+  }
+
+
   const productState = useSelector((state) => state.product.products);
   const data1 = [];
   for (let i = 0; i < productState.length; i++) {
@@ -90,7 +103,36 @@ const Productlist = () => {
     <div>
       <h3 className="mb-4 title">Products</h3>
       <div>
-        <Table columns={columns} dataSource={data1} />
+        <Table
+          columns={[
+            ...columns,
+            {
+              title: "",
+              dataIndex: "delete",
+              render: (text, record) => (
+                <>
+                  <Link
+                    className="ms-3 fs-3 text-danger"
+                    to={`/admin/edit-product/${record.key}`}
+                  >
+                    <AiFillEdit />
+                  </Link>
+                  <Link
+                    className="ms-3 fs-3 text-danger"
+                    to="/"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDelete(record.key);
+                    }}
+                  >
+                    <AiFillDelete />
+                  </Link>
+                </>
+              ),
+            },
+          ]}
+          dataSource={data1}
+        />
       </div>
     </div>
   );

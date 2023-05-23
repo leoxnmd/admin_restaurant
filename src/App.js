@@ -27,6 +27,7 @@ import ViewEnq from "./pages/ViewEnq";
 import ViewOrder from "./pages/ViewOrder";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CategoryEdit from "./pages/category/CategoryEdit";
+import ProductEditForm from "./features/product/productEditForm";
 function App() {
   return (
     <Router>
@@ -64,6 +65,8 @@ function App() {
           <Route path="brand/:id" element={<Addbrand />} />
           <Route path="list-product" element={<Productlist />} />
           <Route path="product" element={<Addproduct />} />
+          <Route path="new-page-product" element={<Productlist />} />
+          <Route path="edit-product/:id" element={<ProductEditForm />} />
         </Route>
       </Routes>
     </Router>

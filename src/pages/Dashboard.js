@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { BsArrowDownRight, BsArrowUpRight } from "react-icons/bs";
 import { Column } from "@ant-design/plots";
 import { Table } from "antd";
-import { getOrders } from "../features/order/orderSlice";
-import { getOrdersTotalPriceOfYear } from "../features/order/orderSlice";
+import { getOrders } from "../features/orderByHieu/orderSlice";
+import { getOrdersTotalPriceOfYear } from "../features/orderByHieu/orderSlice";
 const columns = [
   {
     title: "PRODUCT ID",
@@ -20,7 +20,6 @@ const columns = [
   },
 ];
 
-
 const Dashboard = () => {
 
   const dispatch = useDispatch();
@@ -30,13 +29,11 @@ const Dashboard = () => {
     dispatch(getOrders());
     dispatch(getOrdersTotalPriceOfYear())
   }, []);
-  // const orderState = useSelector((state) => state.order.orders);
-  // const orderTotalOfYearState = useSelector((state) => state.order.getOrdersTotalPriceOfYear);
+
   const State = useSelector((state) => state);
   const orderState = State.order.orders;
-  const orderTotalOfYearState = State.order.getOrdersTotalPriceOfYear;
-  // console.log("orderState", orderState);
-  // console.log("orderTotalOfYearState", orderTotalOfYearState);
+  let orderTotalOfYearState = State.order.getOrdersTotalPriceOfYear;
+
 
   const dataOrders = [];
   for (let i = 0; i < orderState.length; i++) {
@@ -55,7 +52,7 @@ const Dashboard = () => {
 
 
   console.log(orderState);
-  // console.log(orderTotalOfYearState);
+  console.log(orderTotalOfYearState);
   // console.log(State);
 
   const data = [
@@ -66,8 +63,8 @@ const Dashboard = () => {
     },
     {
       type: "Feb",
-      // sales: Number(getTotalPriceOfYear(5)),
       sales: 52,
+      // sales: Number(getTotalPriceOfYear(5)),
     },
     {
       type: "Mar",
