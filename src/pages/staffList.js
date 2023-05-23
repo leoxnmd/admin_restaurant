@@ -8,11 +8,6 @@ import { Table } from "antd";
 
 const columns = [
   {
-    title: "ID",
-    dataIndex: "id",
-    sorter: (a, b) => a.id - b.id,
-  },
-  {
     title: "Email",
     dataIndex: "email",
     sorter: (a, b) => a.name.localeCompare(b.name),
@@ -45,9 +40,10 @@ const Stafflist = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getStaffList());
-  }, [dispatch]);
+  }, []);
 
   const staffState = useSelector((state) => state.staff.products);
+  console.log(staffState);
   const [selectedStaff, setSelectedStaff] = useState(null); // Khai báo state selectedStaff
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
 
@@ -55,24 +51,28 @@ const Stafflist = () => {
     setSelectedStaff(staff); // Lưu thông tin của nhân viên được chọn vào state selectedStaff
     setIsEditFormVisible(true);
   };
-
   const handleDelete = (staffId) => {
     const shouldDelete = window.confirm(
       `Bạn có chắc chắn muốn xóa nhân viên có ID ${staffId} không?`
     );
     if (shouldDelete) {
-      dispatch(deleteStaff(staffId));
+      // Gọi action deleteStaff và truyền vào staffId cần xóa
+      dispatch(deleteStaff(staffId))
+        .then(() => {
+          // Nếu xóa thành công, cập nhật lại danh sách nhân viên
+          dispatch(getStaffList());
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
-  useEffect(() => {
-    dispatch(getStaffList());
-  }, [dispatch, staffState]);
   let dataStaff = [];
   if (staffState && staffState.length > 0) {
     for (let i = 0; i < staffState.length; i++) {
       dataStaff.push({
-        id: staffState[i].id,
+        key: staffState[i].id,
         email: staffState[i].email,
         name: staffState[i].name,
         phone: staffState[i].phone,
@@ -80,16 +80,16 @@ const Stafflist = () => {
         updatedAt: staffState[i].updatedAt,
         action: (
           <>
-           <Link
+            <Link
               key={`detail-${i}`}
-              className=" fs-3 text-danger" 
+              className=" fs-3 text-danger"
               to={`/admin/detailStaff/${staffState[i].id}`}
             >
               <BiInfoCircle />
             </Link>
             <Link
               key={`edit-${i}`}
-              className=" fs-3 text-danger" 
+              className=" fs-3 text-danger"
               to={`/admin/editStaff/${staffState[i].id}`}
             >
               <BiEdit />
@@ -114,6 +114,9 @@ const Stafflist = () => {
       <h3 className="mb-4 title">Staffs</h3>
       <div>
         <Table
+          striped
+          bordered
+          hover
           columns={columns}
           dataSource={dataStaff}
         />

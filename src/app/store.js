@@ -13,6 +13,7 @@ import couponReducer from "../features/coupon/couponSlice";
 import orderReduce from "../features/orderByHieu/orderSlice";
 import orderReducer from "../features/order/orderSlice";
 import staffReducer from "../features/staff/staffSlice";
+import roleReducer from "../features/role/roleSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -29,5 +30,6 @@ export const store = configureStore({
     order: orderReduce,
     order: orderReducer,
     staff: staffReducer,
+    role: roleReducer,
   },
 });

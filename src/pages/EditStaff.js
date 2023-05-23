@@ -1,17 +1,12 @@
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import * as yup from "yup";
-import {
-  getStaffById,
-  resetState,
-  updateStaff,
-} from "../features/staff/staffSlice";
-import CustomInput from "../components/CustomInput";
+import { getStaffById, updateStaff } from "../features/staff/staffSlice";
+import { getRoles } from "../features/role/roleSlice";
 
-let schema = yup.object().shape({
+const schema = yup.object().shape({
   name: yup.string().required("Name is Required"),
   phone: yup
     .string()
@@ -26,6 +21,7 @@ let schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .required("Confirm Password is Required"),
+  roles: yup.array().min(1, "At least one role must be selected"),
 });
 
 const EditStaff = () => {
@@ -33,15 +29,18 @@ const EditStaff = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const [roles, setRoles] = useState([]);
+
   useEffect(() => {
     dispatch(getStaffById(id));
+    dispatch(getRoles()).then((result) => {
+      if (result.payload) {
+        setRoles(result.payload);
+      }
+    });
   }, [dispatch, id]);
 
-  const staff = useSelector((state) => state.staff.createdProduct);
-  console.log(staff);
-  const { isSuccess, isError, isLoading } = useSelector(
-    (state) => state.staff.products
-  );
+  const staff = useSelector((state) => state.staff.getStaffById);
 
   const formik = useFormik({
     initialValues: {
@@ -50,102 +49,131 @@ const EditStaff = () => {
       email: staff?.email || "",
       password: "",
       confirmPassword: "",
+      roleName: roles?.name || "",
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      await dispatch(updateStaff({ id, values }));
+      console.log(values);
+      await dispatch(updateStaff({ id, ...values }));
       formik.resetForm();
       navigate("/admin/staffList");
-      setTimeout(() => {
-        dispatch(resetState());
-      }, 3000);
     },
   });
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Staff updated successfully!");
-    }
-    if (isError) {
-      toast.error("Failed to update staff!");
-    }
-  }, [isSuccess, isError]);
 
   return (
     <div>
       <h3 className="mb-4 title">Edit Staff</h3>
-      <div>
-        <form
-          onSubmit={formik.handleSubmit}
-          className="d-flex gap-3 flex-column"
-        >
-          <CustomInput
+      <form onSubmit={formik.handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">
+            Enter Name
+          </label>
+          <input
             type="text"
-            label="Enter Name"
+            className="form-control"
             name="name"
-            onChng={formik.handleChange("name")}
-            onBlr={formik.handleBlur("name")}
-            val={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.name}
           />
-          <div className="error">
-            {formik.touched.name && formik.errors.name}
-          </div>
-          <CustomInput
+          {formik.touched.name && formik.errors.name && (
+            <div className="error">{formik.errors.name}</div>
+          )}
+        </div>
+        <div className="mb-3">
+          <label htmlFor="phone" className="form-label">
+            Enter Phone
+          </label>
+          <input
             type="text"
-            label="Enter Phone"
+            className="form-control"
             name="phone"
-            onChng={formik.handleChange("phone")}
-            onBlr={formik.handleBlur("phone")}
-            val={formik.values.phone}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.phone}
           />
-          <div className="error">
-            {formik.touched.phone && formik.errors.phone}
-          </div>
-          <CustomInput
-            type="text"
-            label="Enter Email "
+          {formik.touched.phone && formik.errors.phone && (
+            <div className="error">{formik.errors.phone}</div>
+          )}
+        </div>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Enter Email
+          </label>
+          <input
+            type="email"
+            className="form-control"
             name="email"
-            onChng={formik.handleChange("email")}
-            onBlr={formik.handleBlur("email")}
-            val={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
           />
-          <div className="error">
-            {formik.touched.email && formik.errors.email}
-          </div>
-
-          <CustomInput
+          {formik.touched.email && formik.errors.email && (
+            <div className="error">{formik.errors.email}</div>
+          )}
+        </div>
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">
+            Enter Password
+          </label>
+          <input
             type="password"
-            label="Enter Password "
+            className="form-control"
             name="password"
-            onChng={formik.handleChange("password")}
-            onBlr={formik.handleBlur("password")}
-            val={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.password}
           />
-          <div className="error">
-            {formik.touched.password && formik.errors.password}
-          </div>
-
-          <CustomInput
+          {formik.touched.password && formik.errors.password && (
+            <div className="error">{formik.errors.password}</div>
+          )}
+        </div>
+        <div className="mb-3">
+          <label htmlFor="confirmPassword" className="form-label">
+            Confirm Password
+          </label>
+          <input
             type="password"
-            label="Enter Confirm Password "
+            className="form-control"
             name="confirmPassword"
-            onChng={formik.handleChange("confirmPassword")}
-            onBlr={formik.handleBlur("confirmPassword")}
-            val={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.confirmPassword}
           />
-          <div className="error">
-            {formik.touched.confirmPassword && formik.errors.confirmPassword}
-          </div>
-          <button
-            className="btn btn-success border-0 rounded-3 my-5"
-            type="submit"
-            disabled={isLoading}
+          {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+            <div className="error">{formik.errors.confirmPassword}</div>
+          )}
+        </div>
+        <div className="mb-3">
+          <label htmlFor="role" className="form-label">
+            Select Role:
+          </label>
+          <select
+            className="form-select"
+            name="roleName"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.roles}
+            multiple
           >
-            {isLoading ? "Updating staff..." : "Update Staff"}
-          </button>
-        </form>
-      </div>
+            {roles
+              .filter((role) => role.name !== "CUSTOMER")
+              .map((role) => (
+                <option key={role.name} value={role.name}>
+                  {role.name}
+                </option>
+              ))}
+          </select>
+          {formik.touched.roles && formik.errors.roles && (
+            <div className="error">{formik.errors.roles}</div>
+          )}
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Update Staff
+        </button>
+      </form>
     </div>
   );
 };
+
 export default EditStaff;

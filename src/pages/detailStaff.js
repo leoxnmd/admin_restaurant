@@ -13,29 +13,16 @@ const DetailStaff = () => {
     dispatch(getStaffById(id));
   }, [dispatch, id]);
 
-  const staff = useSelector((state) => state.staff.createdProduct);
+  const staff = useSelector((state) => state.staff.getStaffById);
   console.log(staff);
-  // const { isSuccess, isError, isLoading } = useSelector(
-  //   (state) => state.staff.products
-  // );
-
   const formik = useFormik({
     initialValues: {
       name: staff?.name || "",
       phone: staff?.phone || "",
       email: staff?.email || "",
+      roles: staff?.roleName || [],
     },
   });
-
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     toast.success("Staff updated successfully!");
-  //   }
-  //   if (isError) {
-  //     toast.error("Failed to update staff!");
-  //   }
-  // }, [isSuccess, isError]);
-
   return (
     <div>
       <h3 className="mb-4 title">Detail Staff</h3>
@@ -43,24 +30,33 @@ const DetailStaff = () => {
         <form className="d-flex gap-3 flex-column">
           <CustomInput
             type="text"
+            label="Name"
             name="name"
             val={formik.values.name}
-            disabled = "true"
+            disabled="true"
           />
           <CustomInput
             type="text"
-            label="Enter Phone"
+            label="Phone"
             name="phone"
             val={formik.values.phone}
-            disabled = "true"
+            disabled="true"
           />
           <CustomInput
             type="text"
-            label="Enter Email "
+            label="Email "
             name="email"
             val={formik.values.email}
-            disabled = "true"
+            disabled="true"
           />
+          <p>ROLE:</p>
+          <p>
+            {formik.values.roles.length > 0
+              ? formik.values.roles.map((role, index) => (
+                  <li key={index}>{role}</li>
+                ))
+              : ""}
+          </p>
         </form>
       </div>
     </div>
