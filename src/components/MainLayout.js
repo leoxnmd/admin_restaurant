@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import {
   AiOutlineDashboard,
@@ -13,18 +13,40 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { ImBlog } from "react-icons/im";
 import { IoIosNotifications } from "react-icons/io";
-import { FaClipboardList, FaBloggerB } from "react-icons/fa";
+import { FaClipboardList, FaBloggerB, FaAngellist } from "react-icons/fa";
 import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { decodeToken } from "../utils/decodeToken";
+import { signout } from "../features/signout/signoutSlice";
 const { Header, Sider, Content } = Layout;
+
 const MainLayout = () => {
+  const navigate = useNavigate();
+
+  const [decodedToken, setDecodedToken] = useState({});
+  useEffect(() => {
+    const decoded = decodeToken();
+    if (decoded) {
+      setDecodedToken(decoded);
+    }
+  }, []);
+
+  const dispatch = useDispatch();
+  const handleSignoutClick = () => {
+    dispatch(signout()).then(() => {
+      console.log("Da dang xuat");
+      window.location="/";
+    });
+  };
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const navigate = useNavigate();
+
   return (
     <Layout /* onContextMenu={(e) => e.preventDefault()} */>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -61,24 +83,9 @@ const MainLayout = () => {
               label: "Catalog",
               children: [
                 {
-                  key: "product",
-                  icon: <AiOutlineShoppingCart className="fs-4" />,
-                  label: "Add Product",
-                },
-                {
                   key: "list-product",
                   icon: <AiOutlineShoppingCart className="fs-4" />,
                   label: "Product List",
-                },
-                {
-                  key: "brand",
-                  icon: <SiBrandfolder className="fs-4" />,
-                  label: "Brand",
-                },
-                {
-                  key: "list-brand",
-                  icon: <SiBrandfolder className="fs-4" />,
-                  label: "Brand List ",
                 },
                 {
                   key: "category",
@@ -90,71 +97,24 @@ const MainLayout = () => {
                   icon: <BiCategoryAlt className="fs-4" />,
                   label: "Category List",
                 },
-                {
-                  key: "color",
-                  icon: <AiOutlineBgColors className="fs-4" />,
-                  label: "Color",
-                },
-                {
-                  key: "list-color",
-                  icon: <AiOutlineBgColors className="fs-4" />,
-                  label: "Color List",
-                },
               ],
             },
             {
               key: "orders",
               icon: <FaClipboardList className="fs-4" />,
               label: "Orders",
-            },
-            {
-              key: "marketing",
-              icon: <RiCouponLine className="fs-4" />,
-              label: "Marketing",
               children: [
                 {
-                  key: "coupon",
-                  icon: <ImBlog className="fs-4" />,
-                  label: "Add Coupon",
+                  key: "list-orders",
+                  icon: <FaAngellist className="fs-4" />,
+                  label: "List Order",
                 },
                 {
-                  key: "coupon-list",
-                  icon: <RiCouponLine className="fs-4" />,
-                  label: "Coupon List",
+                  key: "update-status-order",
+                  icon: <ImBlog className="fs-4" />,
+                  label: "Update Order",
                 },
               ],
-            },
-            {
-              key: "blogs",
-              icon: <FaBloggerB className="fs-4" />,
-              label: "Blogs",
-              children: [
-                {
-                  key: "blog",
-                  icon: <ImBlog className="fs-4" />,
-                  label: "Add Blog",
-                },
-                {
-                  key: "blog-list",
-                  icon: <FaBloggerB className="fs-4" />,
-                  label: "Blog List",
-                },
-                {
-                  key: "blog-category",
-                  icon: <ImBlog className="fs-4" />,
-                  label: "Add Blog Category",
-                },
-                {
-                  key: "blog-category-list",
-                  icon: <FaBloggerB className="fs-4" />,
-                  label: "Blog Category List",
-                },
-              ],
-            },
-            {
-              key: "enquiries",
-              icon: <FaClipboardList className="fs-4" />,
-              label: "Enquiries",
             },
           ]}
         />
@@ -197,8 +157,8 @@ const MainLayout = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h5 className="mb-0">Navdeep</h5>
-                <p className="mb-0">navdeepdahiya753@gmail.com</p>
+                <h5 className="mb-0">{decodedToken.name}</h5>
+                <p className="mb-0">{decodedToken.sub}</p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>
@@ -214,7 +174,8 @@ const MainLayout = () => {
                   <Link
                     className="dropdown-item py-1 mb-1"
                     style={{ height: "auto", lineHeight: "20px" }}
-                    to="/"
+                    to="/signout"
+                    onClick={handleSignoutClick}
                   >
                     Signout
                   </Link>
